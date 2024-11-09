@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 
 from telemetries import parse_telemetry, TelemetryData
+from database import store_telemetry
+from variables import SERVER_PORT
 
 app = Flask(__name__)
 
@@ -16,14 +18,17 @@ def receive_telemetries():
         # This point may be reached if a new telemetry field is added in a future version, 
         # as older versions won't send this field and will always have missing data.
 
-        return jsonify({"error": "Error: Incomplete telemetry data received. Some required fields are missing."}), 400
-
+        return jsonify({"error": "Incomplete telemetry data received. Some required fields are missing."}), 400
+    
     telemetry = parse_telemetry(data)
 
-    print(telemetry)
-
-    return jsonify({"message": "Success"}), 200
+    try: 
+        store_telemetry(telemetry)
+        return jsonify({"message": "Success"}), 200
+    
+    except Exception as e:
+        return jsonify({"error": e}), 400
 
 if __name__ == '__main__':
-    app.run(port = 5000, debug = True)
+    app.run(port = SERVER_PORT, debug = True)
 
