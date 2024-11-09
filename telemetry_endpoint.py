@@ -1,14 +1,14 @@
 from flask import Flask, request, jsonify
 
 from telemetries import parse_telemetry, TelemetryData
-from database import store_telemetry
+from database import Database, MongoDB
 from variables import SERVER_PORT
 
 app = Flask(__name__)
+database: Database = MongoDB()
 
 @app.route('/telemetry', methods=['POST'])
 def receive_telemetries():
-
     data = request.get_json()
     telemetry_fields = list(TelemetryData.model_fields.keys())
 
@@ -23,7 +23,7 @@ def receive_telemetries():
     telemetry = parse_telemetry(data)
 
     try: 
-        store_telemetry(telemetry)
+        database.store_telemetry(telemetry)
         return jsonify({"message": "Success"}), 200
     
     except Exception as e:
@@ -31,4 +31,5 @@ def receive_telemetries():
 
 if __name__ == '__main__':
     app.run(port = SERVER_PORT, debug = True)
+    database.close()
 
