@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from abc import ABC, abstractmethod
 
 from telemetries import TelemetryData
-from variables import (
+from env import (
     MONGODB_PATH, MONGODB_CLIENT, MONGODB_COLLECTION
     )
 
@@ -16,7 +16,7 @@ class Database(ABC):
     def close(self):
         """Close the database connection."""
         pass
-    
+
 class MongoDB(Database):
     def __init__(self):
         self._client = MongoClient(MONGODB_PATH)

@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 
 from telemetries import parse_telemetry, TelemetryData
 from database import Database, MongoDB
-from variables import SERVER_PORT
+from env import SERVER_PORT
 
 app = Flask(__name__)
 database: Database = MongoDB()
