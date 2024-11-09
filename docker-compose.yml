@@ -1,0 +1,27 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb_container
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGODB_CLIENT} 
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    build: ./core
+    container_name: telemetry_server
+    environment:
+      - MONGODB_PATH=${MONGODB_PATH}
+      - MONGODB_CLIENT=${MONGODB_CLIENT}
+      - MONGODB_COLLECTION=${MONGODB_COLLECTION}
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    volumes:
+      - ./core:/app
+
+volumes:
+  mongo_data:

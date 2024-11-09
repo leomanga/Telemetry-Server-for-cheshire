@@ -1,4 +1,0 @@
-flask
-dotenv
-pydantic
-pymongo

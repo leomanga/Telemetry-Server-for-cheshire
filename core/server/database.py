@@ -1,8 +1,9 @@
 from pymongo import MongoClient
 from abc import ABC, abstractmethod
+from icecream import ic
 
-from telemetries import TelemetryData
-from env import (
+from server.telemetries import TelemetryData
+from server.env import (
     MONGODB_PATH, MONGODB_CLIENT, MONGODB_COLLECTION
     )
 
@@ -27,8 +28,8 @@ class MongoDB(Database):
         try:
             self._collection.insert_one(telemetry.model_dump())
 
-        except Exception:
-            raise Exception(f"Error occurred while saving telemetry data")  
+        except Exception as e:
+            raise Exception(f"Error occurred while saving telemetry data") from e
         
     def close(self):
         self._client.close()
