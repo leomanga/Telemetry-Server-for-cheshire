@@ -26,10 +26,6 @@ def test_uuid4():
         parse_telemetry(telemetryDict)
 
     # id is an uuid4
-    uuid4_generated = "2f1b3641-41fc-4ddb-9202-af6c68b023c3"
-    telemetryDict["telemetry_id"] = str(uuid4_generated)
-
-    # id is an uuid4
     uuid4_generated = uuid4()
     telemetryDict["telemetry_id"] = str(uuid4_generated)
 
