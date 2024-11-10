@@ -7,6 +7,11 @@ from server.env import (
     MONGODB_PATH, MONGODB_CLIENT, MONGODB_COLLECTION
     )
 
+class DatabaseSaveError(Exception):
+    def __init__(self, message=""):
+        self.message = f"Error occurred while saving telemetry data\n {message}"
+        super().__init__(self.message)
+
 class Database(ABC):
     @abstractmethod
     def store_telemetry(self, telemetry: TelemetryData):
@@ -20,7 +25,8 @@ class Database(ABC):
 
 class MongoDB(Database):
     def __init__(self):
-        self._client = MongoClient(MONGODB_PATH)
+        self._client = MongoClient(MONGODB_PATH, uuidRepresentation='standard') # uuidRepresentation='standard' is essential to save UUIDs with the correct type in MongoDB.
+
         self._db = self._client[MONGODB_CLIENT]
         self._collection = self._db[MONGODB_COLLECTION]
     
@@ -29,7 +35,8 @@ class MongoDB(Database):
             self._collection.insert_one(telemetry.model_dump())
 
         except Exception as e:
-            raise Exception(f"Error occurred while saving telemetry data") from e
+            ic(e)
+            raise DatabaseSaveError(str(e)) from e
         
     def close(self):
         self._client.close()

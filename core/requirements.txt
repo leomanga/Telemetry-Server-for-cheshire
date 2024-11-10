@@ -3,3 +3,4 @@ python-dotenv
 pydantic
 pymongo
 icecream
+pytest
