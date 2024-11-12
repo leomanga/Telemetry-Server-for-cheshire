@@ -4,7 +4,6 @@ from uuid import uuid4
 
 from server.telemetries import parse_telemetry, TelemetryData
 
-
 def test_uuid4():
     telemetryDict = {
         "telemetry_id": "",
